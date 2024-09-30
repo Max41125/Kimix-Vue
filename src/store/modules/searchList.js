@@ -31,7 +31,7 @@ export default {
   actions: {
     async getPopularItemsRequest() {
       const result = await axios.get(
-        "https://backend.kimix.space:80/api/chemicals"
+        "https://backend.kimix.space:80/api/items"
       );
       const listOfPopularItems = result.data;
 

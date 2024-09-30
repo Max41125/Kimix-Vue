@@ -9,6 +9,8 @@ export default {
     subSubCategoriesList: [],
     currentItem: [],
     productRequestValue: "",
+    searchProductsList: [],
+    
   },
   getters: {
     getCategoriesList: ({ categoriesList }) => categoriesList,
@@ -17,6 +19,7 @@ export default {
     getProductRequestValue: ({ productRequestValue }) => productRequestValue,
     getSubSubCategoriesList: ({ subSubCategoriesList }) => subSubCategoriesList,
     getCurrentItem: ({ currentItem }) => currentItem,
+    getSearchProductsList: ({ searchProductsList }) => searchProductsList,
   },
   mutations: {
     changeCategoriesList(state, data) {
@@ -37,6 +40,10 @@ export default {
     changeCurrentItem(state, data) {
       state.currentItem = data;
     },
+    changeProductsSearch(state, products) {
+      state.searchProductsList = products; // Обновляем список результатов поиска
+    },
+
   },
   actions: {
     async getCurrentItemRequest(context, id) {
@@ -54,11 +61,22 @@ export default {
       return result;
     },
     async getCategoriesListRequest() {
-      const result = await axios.get(
-        `https://backend.kimix.space/api/v1/catalog/categories`
-      );
-      store.commit("changeCategoriesList", result.data);
-      return result;
+      try {
+        const result = await axios.get(`https://backend.kimix.space/api/v1/catalog/categories`);
+        store.commit("changeCategoriesList", result.data);
+        return result;
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        if (error.response) {
+          console.error('Response data:', error.response.data);
+          console.error('Response status:', error.response.status);
+          console.error('Response headers:', error.response.headers);
+        } else if (error.request) {
+          console.error('Request data:', error.request);
+        } else {
+          console.error('Error message:', error.message);
+        }
+      }
     },
     setProductRequestValue(context, { data }) {
       store.commit("changeProductRequestValue", data);
@@ -78,5 +96,26 @@ export default {
       store.commit("changeProductsList", result.data);
       return result;
     },
+
+    async getProductsSearchRequest(context, { name }) {
+      try {
+        const result = await axios.get(
+          `https://test.kimix.space/api/chemicals/search?q=${name}`
+        );
+        console.log('API response:', result.data);
+        context.commit("changeProductsSearch", result.data); // Коммитим результат в состояние поиска
+        return result;
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    },
+    
+
+
+
+
+
+
+
   },
 };

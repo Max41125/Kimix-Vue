@@ -23,20 +23,11 @@
           type="text"
           placeholder="реагента по номеру/названию/коду..."
           name="search"
-          v-model="postData.fullName"
-          id="message"
-          @keyup.enter="
-            this.$router.push({
-              name: 'catalogSearch',
-            })
-          "
+          v-model="searchQuery"
+          @keyup.enter="searchProducts"
         />
-        <router-link type="button" :to="{ name: 'catalogSearch' }">
-          <img
-            src="/icons/MagnifyingGlass.png"
-            alt=""
-            class="input-section_img"
-          />
+        <router-link type="button" :to="{ name: 'catalogSearch', query: { q: searchQuery } }">
+          <img src="/icons/MagnifyingGlass.png" alt="" class="input-section_img" />
         </router-link>
       </div>
       <!-- <div class="header-lang-section">
@@ -199,6 +190,7 @@ export default {
       settingsBttn: false,
       slideBack: false,
       ordersButton: false,
+      searchQuery: '',
     };
   },
   name: "HeaderSection",
@@ -236,6 +228,18 @@ export default {
         this.showProfileDropdown = false;
       });
     },
+    ...mapActions(['getProductsSearchRequest']),
+    async searchProducts() {
+      console.log('Search initiated with query:', this.searchQuery); // Отладка
+      if (this.searchQuery) {
+        await this.getProductsSearchRequest({ name: this.searchQuery });
+        this.$router.push({ name: 'catalogSearch', query: { q: this.searchQuery } });
+      }
+    }
+
+
+
+
   },
   mounted() {
     document.addEventListener("click", this.close);
@@ -254,7 +258,7 @@ export default {
       return this.$store.getters.getUserRole;
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -57,6 +57,12 @@ const routes = [
     name: "adminPanel",
     component: AdminPanel,
   },
+  {
+    path: '/search',
+    name: 'catalogSearch',
+    component: () => import('@/pages/ProductSearch.vue'), // Убедитесь, что путь правильный
+  },
+  
 ];
 
 const router = createRouter({

@@ -1,6 +1,9 @@
 const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
-  transpileDependencies: true,
+  transpileDependencies: [
+    // Здесь перечислите ваши зависимости, если они есть
+  
+  ],
 
   pluginOptions: {
     vuetify: {
